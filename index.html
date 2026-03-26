@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntik Sosmed Yanto - Auto Followers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: slideDown 1s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo::before {
+            content: "💉";
+            font-size: 3.5rem;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 4px 12px rgba(255,107,107,0.6));
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        .platform-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            background: #f8f9fa;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            min-height: 55px;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #fafbfc;
+            font-weight: 500;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        small {
+            color: #888;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .btn-suntik {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-suntik:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        .btn-suntik:active {
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 50px 30px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        .result {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .result.success { 
+            border-top: 6px solid #00b894;
+            color: #00695c;
+        }
+
+        .result.error { 
+            border-top: 6px solid #e17055;
+            color: #c44569;
+        }
+
+        .result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hidden { display: none !important; }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-top: auto;
+            padding-top: 25px;
+            font-weight: 500;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 15px; }
+            .logo h1 { font-size: 1.8rem; }
+            .logo::before { font-size: 3rem; }
+            .card { padding: 25px 20px; }
+            .platform-tabs { gap: 8px; }
+            .tab { padding: 12px 15px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>Suntik Sosmed Yanto</h1>
+            </div>
+            <p>🚀 Auto Followers & Likes Tercepat 2024</p>
+        </header>
+
+        <main class="main">
+            <div class="card">
+                <div class="platform-tabs">
+                    <button class="tab active" data-platform="ig">
+                        <span>📸</span> Instagram
+                    </button>
+                    <button class="tab" data-platform="fb">
+                        <span>📘</span> Facebook
+                    </button>
+                    <button class="tab" data-platform="tt">
+                        <span>🎵</span> TikTok
+                    </button>
+                    <button class="tab" data-platform="yt">
+                        <span>📺</span> YouTube
+                    </button>
+                </div>
+
+                <form id="suntikForm" class="suntik-form">
+                    <div class="input-group">
+                        <label>👤 Username/ID</label>
+                        <input type="text" id="username" placeholder="Masukkan username tanpa @" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>🔢 Jumlah</label>
+                        <select id="jumlah">
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1.000 ⭐</option>
+                            <option value="5000">5.000 ⭐⭐</option>
+                            <option value="10000">10.000 ⭐⭐⭐</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>🔑 API Key</label>
+                        <input type="text" id="apiKey" value="qagwxa-cyscf4-ghm5dj-dfhnws-yedbx3" readonly>
+                        <small>✅ Dari fayupedia.id/example.txt | ID: 90700</small>
+                    </div>
+
+                    <button type="submit" class="btn-suntik">
+                        <span>🚀</span> SUNTIK SEKARANG!
+                    </button>
+                </form>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>⏳ Mengirim order ke server...</p>
+                <p style="font-size: 0.9rem; opacity: 0.8;">Jangan tutup halaman ini!</p>
+            </div>
+
+            <div id="result" class="result hidden"></div>
+        </main>
+
+        <footer>
+            <p>© 2024 Yanto Sosmed | API ID: <strong>90700</strong></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('suntikForm');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const tabs = document.querySelectorAll('.tab');
+            
+            let currentPlatform = 'ig';
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentPlatform = tab.dataset.platform;
+                });
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const jumlah = document.getElementById('jumlah').value;
+                const apiKey = document.getElementById('apiKey').value;
+                const apiId = '90700';
+                
+                if (!username) {
+                    alert('❌ Username wajib diisi bro!');
+                    return;
+                }
+
+                form.classList.add('hidden');
+                loading.classList.remove('hidden');
+                result.classList.add('hidden');
+                
+                try {
+                    const response = await fetch('api.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            platform: currentPlatform,
+                            username: username,
+                            jumlah: jumlah,
+                            api_key: apiKey,
+                            api_id: apiId
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    loading.classList.add('hidden');
+                    result.innerHTML = `
+                        <h3>${data.status === 'success' ? '✅ SUNTIK BERHASIL!' : '❌ GAGAL BRO!'}</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 20px;">${data.message}</p>
+                        <p><strong>📋 ID Order:</strong> <code>${data.order_id || 'N/A'}</code></p>
+                        ${data.eta ? `<p><strong>⏱️ ETA:</strong> ${data.eta}</p>` : ''}
+                        <button onclick="location.reload()" class="btn-suntik" style="margin-top: 25px; padding: 15px;">
+                            <span>🔄</span> SUNTIK LAGI
+                        </button>
+                    `;
+                    result.classList.toggle('success', data.status === 'success');
+                    result.classList.toggle('error', data.status !== 'success');
+                    result.classList.remove('hidden');
+                    
+                } catch (error) {
+                    loading.classList.add('hidden');
+                    result.innerHTML = `
+                        <h3>❌ KONEKSI ERROR!</h3>
+                        <p>Server down atau internet lelet. Coba lagi ya bro! 😅</p>
+                        <button onclick="location.reload()" class="btn-suntik" style="margin-top: 25px; padding: 15px;">
+                            <span>🔄</span> COBA LAGI
+                        </button>
+                    `;
+                    result.classList.add('error');
+                    result.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+  </html>
